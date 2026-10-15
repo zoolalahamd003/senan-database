@@ -1,4 +1,9 @@
 
+const API_BASE = "https://senan-database.onrender.com";
+
+
+
+
 // ==================== LOADING OVERLAY ====================
 
 const loadingOverlay = document.getElementById("loadingOverlay");
@@ -70,7 +75,7 @@ async function getshoes() {
   try {
     showLoading();
 
-    let response = await fetch(`http://localhost:3000/shoes`);
+    let response = await fetch(`${API_BASE}`);
 
     shoearray = await response.json();
 
@@ -182,7 +187,7 @@ shoeform.addEventListener("submit", async function (event) {
 
       showLoading();
 
-      let response = await fetch("http://localhost:3000/shoes", {
+      let response = await fetch(`${API_BASE}/shoes`, {
         method: "POST",
         body: formdata,
       });
@@ -244,7 +249,7 @@ shoeform.addEventListener("submit", async function (event) {
       showLoading();
 
       let response = await fetch(
-        `http://localhost:3000/shoes/${selectedshoeid}`,
+        `${API_BASE}/shoes/${selectedshoeid}`,
         {
           method: "PATCH",
           body: formdata,
@@ -354,7 +359,7 @@ function addShoeToTable(shoe) {
 
   let image = document.createElement("img");
 
-  image.src = `http://localhost:3000/images/${imageid}`;
+  image.src = `${API_BASE}/images/${imageid}`;
 
   slider.append(image);
 
@@ -395,7 +400,7 @@ function addShoeToTable(shoe) {
 
     setTimeout(function () {
 
-      image.src = `http://localhost:3000/images/${imageid}`;
+      image.src = `${API_BASE}/images/${imageid}`;
 
       image.classList.remove("changing");
 
@@ -472,7 +477,7 @@ row.append(
       showLoading();
 
       let response = await fetch(
-        `http://localhost:3000/shoes/${id}`,
+        `${API_BASE}/shoes/${id}`,
         {
           method: "DELETE",
         }
@@ -588,7 +593,7 @@ closesearchmodal.addEventListener("click", function () {
   performsearchbtn.addEventListener("click",async function(){
 
     let searchinput=searchbrandinput.value
-     let response = await fetch(`http://localhost:3000/shoes/search?company=${searchinput}`);
+     let response = await fetch(`${API_BASE}/shoes/search?company=${searchinput}`);
     let data=await response.json()
     shoearray=data
     tablerow.innerHTML=""
