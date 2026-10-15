@@ -3,160 +3,197 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DATABASE ADMIN</title>
-    <link rel="stylesheet" href="interface.css" />
+    <title>Shoe Stockroom</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="interface6.css" />
   </head>
   <body>
-    <nav>
-      <h1>SHOE DATABASE ADMIN</h1>
-    </nav>
+    <header id="topbar">
+      <div id="topbar-title">
+        <span id="topbar-mark">Stockroom</span>
+        <h1>Shoe inventory</h1>
+      </div>
+      <div id="topbar-stats">
+        <div class="stat">
+          <span class="stat-value" id="statpairs">0</span>
+          <span class="stat-label">pairs in stock</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="statmodels">0</span>
+          <span class="stat-label">listed models</span>
+        </div>
+      </div>
+    </header>
 
-    <div id="shoeform">
-      <h2>ADD NEW SHOE</h2>
+    <main id="layout">
+      <!-- ==================== ADD SHOE ==================== -->
+      <section id="shoeform">
+        <h2>Add a shoe</h2>
 
-      <form id="form">
+        <form id="form">
+          <div class="field">
+            <label for="companyinput">Brand</label>
+            <select id="companyinput">
+              <option value="NIKE">Nike</option>
+              <option value="ADIDAS">Adidas</option>
+              <option value="PUMA">Puma</option>
+              <option value="REEBOK">Reebok</option>
+              <option value="NEW_BALANCE">New Balance</option>
+              <option value="CONVERSE">Converse</option>
+              <option value="VANS">Vans</option>
+              <option value="ASICS">Asics</option>
+              <option value="SKECHERS">Skechers</option>
+              <option value="UNDER_ARMOUR">Under Armour</option>
+              <option value="JORDAN">Jordan</option>
+              <option value="TIMBERLAND">Timberland</option>
+              <option value="FILA">Fila</option>
+              <option value="BATA">Bata</option>
+              <option value="CLARKS">Clarks</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
 
+          <div class="field">
+            <label for="shoenameinput">Shoe name</label>
+            <input id="shoenameinput" type="text" placeholder="Air Max 90" />
+          </div>
 
-        <label for="companyinput">BRAND/COMPANY</label>
-        <select id="companyinput">
-  <option value="NIKE">NIKE</option>
-  <option value="ADIDAS">ADIDAS</option>
-  <option value="PUMA">PUMA</option>
-  <option value="REEBOK">REEBOK</option>
-  <option value="NEW_BALANCE">NEW BALANCE</option>
-  <option value="CONVERSE">CONVERSE</option>
-  <option value="VANS">VANS</option>
-  <option value="ASICS">ASICS</option>
-  <option value="SKECHERS">SKECHERS</option>
-  <option value="UNDER_ARMOUR">UNDER ARMOUR</option>
-  <option value="JORDAN">JORDAN</option>
-  <option value="TIMBERLAND">TIMBERLAND</option>
-  <option value="FILA">FILA</option>
-  <option value="BATA">BATA</option>
-  <option value="CLARKS">CLARKS</option>
-  <option value="OTHER">OTHER</option>
-</select>
+          <div class="field">
+            <label for="imageinput">Photos</label>
+            <input type="file" id="imageinput" multiple accept="image/*" />
+          </div>
 
-        <label for="shoenameinput">SHOE NAME</label>
-        <input id="shoenameinput" type="text" />
+          <div class="field">
+            <label for="priceinput">Price</label>
+            <input id="priceinput" type="number" placeholder="0" />
+          </div>
 
-        <label for="sizeinput">SHOE SIZE</label>
-        <input type="number" id="sizeinput">
+          <div class="field">
+            <label for="genderinput">Gender</label>
+            <select id="genderinput">
+              <option value="MALE">Men</option>
+              <option value="FEMALE">Women</option>
+              <option value="UNISEX">Unisex</option>
+            </select>
+          </div>
 
-        <label for="imageinput">IMAGE </label>
-        <input type="file" id="imageinput" multiple accept="image/*">
+          <div class="field">
+            <label for="conditioninput">Condition</label>
+            <select id="conditioninput">
+              <option value="NEW">New</option>
+              <option value="USED">Used</option>
+            </select>
+          </div>
 
-        <label for="priceinput">PRICE</label>
-        <input id="priceinput" type="number" />
+          <div class="field field-wide">
+            <label>Colors available</label>
+            <div id="colorpicker" class="swatchpicker"></div>
+          </div>
 
-        <label for="genderinput">GENDER</label>
-       <select id="genderinput">
-      <option value="MALE">MALE</option>
-        <option value="FEMALE">FEMALE</option>
-       <option value="UNISEX">UNISEX</option>
-      </select>
+          <div class="field field-wide">
+            <label>Sizes &amp; stock</label>
+            <div id="sizerows"></div>
+            <button type="button" id="addsizerowbtn" class="ghostbtn">
+              + Add size
+            </button>
+          </div>
 
-        <label for="conditioninput">CONDITION</label>
-        <select id="conditioninput">
-          <option value="USED">USED</option>
-          <option value="NEW">NEW</option>
-        </select>
+          <button id="addinputbtn" type="submit">Add shoe</button>
+        </form>
+      </section>
 
-        <label for="stockinput">STOCK</label>
-        <input id="stockinput" type="number" />
+      <!-- ==================== INVENTORY ==================== -->
+      <section id="tablediv">
+        <div id="tablediv-head">
+          <h3>Inventory</h3>
+          <div id="tablecontrols">
+            <button id="searchbtn">Search by brand</button>
+            <button id="resetbtn">Reset</button>
+          </div>
+        </div>
 
-        <button id="addinputbtn" type="submit">ADD SHOE</button>
+        <p id="editinghint">Click any cell to edit it in place.</p>
 
-        
+        <div id="tablescroll">
+          <table id="table">
+            <thead>
+              <tr>
+                <th>Brand</th>
+                <th>Shoe name</th>
+                <th>Photo</th>
+                <th>Colors</th>
+                <th>Sizes &amp; stock</th>
+                <th>Price</th>
+                <th>Gender</th>
+                <th>Condition</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody id="tablerow"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
 
-      </form>
- <button id="searchbtn">SEARCH</button>
- <button id="resetbtn">RESET SEARCH</button>
-    </div>
-
-    <div id="tablediv">
-      <h3>SHOES IN DATABASE</h3>
-
-      <table id="table">
-        <thead>
-          <tr>
-            <th>COMPANY/BRAND</th>
-            <th>SHOE NAME</th>
-            <th>IMAGE</th>
-            <th>SIZE</th>
-            <th>PRICE</th>
-            <th>GENDER</th>
-            <th>CONDITION</th>
-            <th>STOCK</th>
-            <th>ACTIONS</th>
-
-          </tr>
-        </thead>
-        <tbody id="tablerow">
-       
-        </tbody>
-      </table>
-    </div>
-
+    <!-- ==================== DUPLICATE MODAL ==================== -->
     <div id="modaloverlay">
       <div id="modal">
         <button id="closemodalbtn">✕</button>
-        <h4>DUPLICATE EXISTED</h4>
-        <h6>THIS SHOE ALREADY EXISTED IN YOUR DATABASE</h6>
-        <p id="brandmodal">BRAND:</p>
-        <p id="shoemodal">SHOE:</p>
+        <h4>Already in stock</h4>
+        <h6>This shoe already exists in your inventory</h6>
+        <p id="brandmodal">Brand:</p>
+        <p id="shoemodal">Shoe:</p>
       </div>
-
     </div>
 
+    <!-- ==================== VALIDATION MODAL ==================== -->
     <div id="emptyinputmodal">
-    <p id="emptyinputmessage"></p>
-    <button id="closeemptyinputmodal">OK</button>
-</div>
-
-<div id="loadingOverlay">
-    <div id="loadingBox">
-        <div id="loadingSpinner"></div>
-        <p>Loading...</p>
+      <p id="emptyinputmessage"></p>
+      <button id="closeemptyinputmodal">OK</button>
     </div>
-</div>
 
+    <!-- ==================== LOADING ==================== -->
+    <div id="loadingOverlay">
+      <div id="loadingBox">
+        <div id="loadingSpinner"></div>
+        <p>Loading…</p>
+      </div>
+    </div>
 
-
-
-
-<div id="searchmodal">
-
-    <div id="searchbox">
-
+    <!-- ==================== SEARCH MODAL ==================== -->
+    <div id="searchmodal">
+      <div id="searchbox">
         <button id="closesearchmodal">✕</button>
-
-        <h2>SEARCH BY BRAND</h2>
+        <h2>Search by brand</h2>
 
         <select id="searchbrandinput">
-       <option value="NIKE">NIKE</option>
-  <option value="ADIDAS">ADIDAS</option>
-  <option value="PUMA">PUMA</option>
-  <option value="REEBOK">REEBOK</option>
-  <option value="NEW_BALANCE">NEW BALANCE</option>
-  <option value="CONVERSE">CONVERSE</option>
-  <option value="VANS">VANS</option>
-  <option value="ASICS">ASICS</option>
-  <option value="SKECHERS">SKECHERS</option>
-  <option value="UNDER_ARMOUR">UNDER ARMOUR</option>
-  <option value="JORDAN">JORDAN</option>
-  <option value="TIMBERLAND">TIMBERLAND</option>
-  <option value="FILA">FILA</option>
-  <option value="BATA">BATA</option>
-  <option value="CLARKS">CLARKS</option>
-  <option value="OTHER">OTHER</option>
+          <option value="NIKE">Nike</option>
+          <option value="ADIDAS">Adidas</option>
+          <option value="PUMA">Puma</option>
+          <option value="REEBOK">Reebok</option>
+          <option value="NEW_BALANCE">New Balance</option>
+          <option value="CONVERSE">Converse</option>
+          <option value="VANS">Vans</option>
+          <option value="ASICS">Asics</option>
+          <option value="SKECHERS">Skechers</option>
+          <option value="UNDER_ARMOUR">Under Armour</option>
+          <option value="JORDAN">Jordan</option>
+          <option value="TIMBERLAND">Timberland</option>
+          <option value="FILA">Fila</option>
+          <option value="BATA">Bata</option>
+          <option value="CLARKS">Clarks</option>
+          <option value="OTHER">Other</option>
         </select>
 
-        <button id="performsearchbtn">SEARCH</button>
-
+        <button id="performsearchbtn">Search</button>
+      </div>
     </div>
 
-</div>
     <script src="interface.js"></script>
   </body>
 </html>
