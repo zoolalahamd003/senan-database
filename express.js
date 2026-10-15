@@ -1,26 +1,17 @@
 const express = require("express");
-
-
 const mongoose = require("mongoose");
-
 const multer = require("multer");
+const { GridFSBucket } = require("mongodb");
+const cors = require("cors");
+require("dotenv").config();
 
 let bucket;
 
 const storage = multer.memoryStorage();
-
 const upload = multer({ storage: storage });
 
-const { GridFSBucket } = require("mongodb");
-
-const cors = require("cors");
-
-require("dotenv").config();
-
 const app = express();
-
 app.use(cors());
-
 app.use(express.json());
 
 app.listen(3000, () => {
@@ -42,6 +33,14 @@ mongoose
     console.log(error);
   });
 
+// ==================== COLOR PALETTE ====================
+const COLOR_PALETTE = [
+  "BLACK", "WHITE", "RED", "NAVY", "ROYAL_BLUE", "GREY", "BEIGE", "BROWN",
+  "GREEN", "OLIVE", "ORANGE", "YELLOW", "PINK", "PURPLE", "MAROON",
+  "GOLD", "SILVER", "MULTICOLOR",
+];
+
+// ==================== SCHEMA ====================
 let shoeschema = new mongoose.Schema(
   {
     company: {
@@ -59,10 +58,44 @@ let shoeschema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectID,
       },
     ],
-    shoesize: {
-      type: Number,
-      required: true,
-      min: [1, "shoe size cant be negative or zero:"],
+    colors: {
+      type: [
+        {
+          type: String,
+          enum: COLOR_PALETTE,
+        },
+      ],
+      required: [true, "select at least one color"],
+      validate: {
+        validator: function (colors) {
+          return Array.isArray(colors) && colors.length > 0;
+        },
+        message: "select at least one color",
+      },
+    },
+    sizes: {
+      type: [
+        {
+          size: {
+            type: Number,
+            required: [true, "size is required"],
+            min: [1, "shoe size cant be negative or zero"],
+          },
+          stock: {
+            type: Number,
+            required: [true, "stock is required"],
+            min: [0, "stock cant be negative"],
+          },
+        },
+      ],
+      required: [true, "add at least one size"],
+      validate: {
+        validator: function (sizes) {
+          return Array.isArray(sizes) && sizes.length > 0;
+        },
+        message: "add at least one size",
+      },
+      _id: false,
     },
     price: {
       type: Number,
@@ -78,7 +111,7 @@ let shoeschema = new mongoose.Schema(
       type: String,
       required: [true, "Gender is required"],
       uppercase: true,
-      enum: ["MALE", "male", "FEMALE", "female", "unisex"],
+      enum: ["MALE", "male", "FEMALE", "female", "UNISEX", "unisex"],
     },
     condition: {
       type: String,
@@ -86,16 +119,9 @@ let shoeschema = new mongoose.Schema(
       uppercase: true,
       enum: ["USED", "used", "NEW", "new"],
     },
-    stock: {
-      type: Number,
-      required: [true, "stock is required"],
-      min: [0, "stock cant be negative"],
-    },
   },
   {
     strict: true,
-  },
-  {
     timestamps: true,
   },
 );
@@ -107,6 +133,21 @@ const asyncHandler = (fn) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
+
+// Colors and sizes arrive as JSON strings inside multipart form-data
+// (FormData can't carry real arrays/objects), so parse them back into
+// real arrays before they touch Mongoose.
+function parseArrayField(rawValue, fieldName) {
+  if (rawValue === undefined) return undefined;
+  if (Array.isArray(rawValue)) return rawValue;
+  try {
+    return JSON.parse(rawValue);
+  } catch (error) {
+    let parseerror = new Error(`${fieldName} must be valid JSON`);
+    parseerror.name = "ValidationError";
+    throw parseerror;
+  }
+}
 
 app.post(
   "/shoes",
@@ -123,37 +164,31 @@ app.post(
       });
     }
 
-    console.log("post");
     let imageid = [];
 
     for (let i = 0; i < req.files.length; i++) {
       let uploadstream = bucket.openUploadStream(req.files[i].originalname);
       await new Promise((resolve, reject) => {
-        uploadstream.on("finish", () => {
-          console.log("upload finish");
-          resolve();
-        });
-
-        uploadstream.on("error", (error) => {
-          console.log("some error occured");
-          reject(error);
-        });
-        console.log("upload started");
+        uploadstream.on("finish", () => resolve());
+        uploadstream.on("error", (error) => reject(error));
         uploadstream.end(req.files[i].buffer);
-        console.log("upoad finish");
-        console.log("the image is ", uploadstream.id);
       });
 
       imageid.push(uploadstream.id);
-
-      req.body.images = imageid;
-
-      console.log("the image id are", imageid);
     }
-    req.body.images = imageid;
 
-    let data = await SHOEMODEL.create(req.body);
-    //will directly create it
+    let newshoe = {
+      company: req.body.company,
+      shoename: req.body.shoename,
+      price: req.body.price,
+      gender: req.body.gender,
+      condition: req.body.condition,
+      colors: parseArrayField(req.body.colors, "colors"),
+      sizes: parseArrayField(req.body.sizes, "sizes"),
+      images: imageid,
+    };
+
+    let data = await SHOEMODEL.create(newshoe);
     res.status(201).json(data);
   }),
 );
@@ -161,7 +196,6 @@ app.post(
 app.get(
   "/shoes",
   asyncHandler(async (req, res, next) => {
-    console.log("get shoes");
     let wholedata = await SHOEMODEL.find();
     res.json(wholedata);
   }),
@@ -177,13 +211,10 @@ app.get(
   }),
 );
 
-
 app.get(
   "/shoes/:id",
   asyncHandler(async (req, res, next) => {
-    console.log(req.params.id);
     let id = req.params.id;
-
     let iddata = await SHOEMODEL.findById(id);
     if (iddata == null) {
       return res.status(404).json({ message: "shoe not found" });
@@ -195,20 +226,15 @@ app.get(
 app.delete(
   "/shoes/:id",
   asyncHandler(async (req, res, next) => {
-    console.log("delete");
     let id = req.params.id;
     let deletedata = await SHOEMODEL.findById(id);
     if (deletedata == null) {
-      return res.status(404).json({
-        message: "Shoe not found",
-      });
+      return res.status(404).json({ message: "Shoe not found" });
     }
     for (let i = 0; i < deletedata.images.length; i++) {
-      let deleteid = deletedata.images[i];
-      await bucket.delete(deleteid);
+      await bucket.delete(deletedata.images[i]);
     }
     let deleted = await SHOEMODEL.findByIdAndDelete(id);
-
     res.json(deleted);
   }),
 );
@@ -217,10 +243,7 @@ app.get(
   "/images/:id",
   asyncHandler(async (req, res) => {
     let imageid = new mongoose.Types.ObjectId(req.params.id);
-    //will simply sonvert te id to mongose id like the Number(id)
-
     let downloadstream = bucket.openDownloadStream(imageid);
-
     downloadstream.on("error", (error) => {
       res.status(404).send("image not found");
     });
@@ -228,55 +251,49 @@ app.get(
   }),
 );
 
+// ==================== PATCH (full edit AND inline single-field edit) ====================
+const EDITABLE_FIELDS = ["company", "shoename", "price", "gender", "condition"];
+
 app.patch(
   "/shoes/:id",
   upload.array("images"),
   asyncHandler(async (req, res, next) => {
-    const updatewholedata = {
-      company: req.body.company,
-      shoename: req.body.shoename,
-      shoesize: req.body.shoesize,
-      price: req.body.price,
-      gender: req.body.gender,
-      condition: req.body.condition,
-      stock: req.body.stock,
-    };
-    console.log("patch");
     let id = req.params.id;
-    let imageid = [];
     let oldshoe = await SHOEMODEL.findById(id);
 
     if (oldshoe == null) {
-      return res.status(404).json({
-        message: "Shoe not found",
-      });
+      return res.status(404).json({ message: "Shoe not found" });
     }
 
-    for (let i = 0; i < req.files.length; i++) {
-      console.log("1 - starting image upload");
-      let uploadstream = bucket.openUploadStream(req.files[i].originalname);
-      console.log("2 - upload stream created");
-      await new Promise((resolve, reject) => {
-        uploadstream.on("finish", () => {
-          console.log("upload finish");
-          console.log("3 - upload finished");
-          resolve();
-        });
+    const updatewholedata = {};
 
-        uploadstream.on("error", (error) => {
-          console.log("some error occured");
-          reject(error);
-        });
-
-        console.log("4 - sending buffer");
-        uploadstream.end(req.files[i].buffer);
-      });
-
-      console.log("5 - promise finished");
-      imageid.push(uploadstream.id);
+    for (let i = 0; i < EDITABLE_FIELDS.length; i++) {
+      let field = EDITABLE_FIELDS[i];
+      if (req.body[field] !== undefined) {
+        updatewholedata[field] = req.body[field];
+      }
     }
 
-    if (imageid.length > 0) {
+    if (req.body.colors !== undefined) {
+      updatewholedata.colors = parseArrayField(req.body.colors, "colors");
+    }
+
+    if (req.body.sizes !== undefined) {
+      updatewholedata.sizes = parseArrayField(req.body.sizes, "sizes");
+    }
+
+    let imageid = [];
+
+    if (req.files && req.files.length > 0) {
+      for (let i = 0; i < req.files.length; i++) {
+        let uploadstream = bucket.openUploadStream(req.files[i].originalname);
+        await new Promise((resolve, reject) => {
+          uploadstream.on("finish", () => resolve());
+          uploadstream.on("error", (error) => reject(error));
+          uploadstream.end(req.files[i].buffer);
+        });
+        imageid.push(uploadstream.id);
+      }
       updatewholedata.images = imageid;
     }
 
@@ -284,10 +301,9 @@ app.patch(
       new: true,
       runValidators: true,
     });
+
     if (updateddata == null) {
-      return res.status(404).json({
-        message: "Shoe not found",
-      });
+      return res.status(404).json({ message: "Shoe not found" });
     }
 
     if (imageid.length > 0) {
@@ -300,60 +316,20 @@ app.patch(
   }),
 );
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 app.use((req, res) => {
-  res.status(404).json({
-    message: "Route not found",
-  });
+  res.status(404).json({ message: "Route not found" });
 });
 
-app.use((error, req, res) => {
-  console.log("the middleware finuction has beens uesed:");
+app.use((error, req, res, next) => {
   console.log(error);
   if (error.name === "ValidationError") {
-    return res
-      .status(400)
-      .json({ message: "validation failed", error: error.message });
+    return res.status(400).json({ message: "validation failed", error: error.message });
   }
   if (error.name === "CastError") {
-    return res.status(400).json({
-      message: "Invalid ID",
-      error: error.message,
-    });
+    return res.status(400).json({ message: "Invalid ID", error: error.message });
   }
   if (error.code === 11000) {
-    return res.status(409).json({
-      message: "Duplicate value",
-      error: error.message,
-    });
+    return res.status(409).json({ message: "Duplicate value", error: error.message });
   }
-  res
-    .status(500)
-    .json({ message: "something went wrong", error: error.message });
+  res.status(500).json({ message: "something went wrong", error: error.message });
 });
