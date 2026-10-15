@@ -1,6 +1,8 @@
-/* =========================
-   GLOBAL RESET
-========================= */
+/* =========================================================
+   SHOE STOCKROOM — dashboard admin UI
+   Tokens: paper #EDEEF0, surface #FFFFFF, ink #14171C,
+   muted #5B6270, accent #E8541C (single accent, used sparingly)
+========================================================= */
 
 * {
   margin: 0;
@@ -8,676 +10,766 @@
   box-sizing: border-box;
 }
 
+:root {
+  --paper: #EDEEF0;
+  --surface: #FFFFFF;
+  --ink: #14171C;
+  --muted: #5B6270;
+  --border: #DCDFE3;
+  --accent: #E8541C;
+  --accent-ink: #FFFFFF;
+  --danger: #B0281C;
+  --ok: #1F8A56;
+}
+
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
 }
 
 body {
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #eef2f7;
-  color: #1e293b;
+  font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.5;
 }
 
+h1, h2, h3, h4 {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+}
 
 /* =========================
-   NAVIGATION
+   TOPBAR
 ========================= */
 
-nav {
-  width: 100%;
-  padding: 1.2rem 5%;
-  background: #111827;
-  color: #ffffff;
-  text-align: center;
-  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 1.4rem 2rem;
+  background: var(--ink);
+  color: #F4F5F6;
+  border-bottom: 3px solid var(--accent);
 }
 
-nav h1 {
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  letter-spacing: 0.08em;
+#topbar-mark {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-transform: uppercase;
 }
 
+#topbar h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 0.15rem;
+}
+
+#topbar-stats {
+  display: flex;
+  gap: 1.75rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.stat-value {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  color: #A9AEB6;
+  margin-top: 0.2rem;
+}
 
 /* =========================
-   ADD SHOE CARD
+   LAYOUT
+========================= */
+
+#layout {
+  display: grid;
+  grid-template-columns: 21rem 1fr;
+  gap: 1.5rem;
+  align-items: start;
+  width: min(96%, 90rem);
+  margin: 1.75rem auto 3rem;
+}
+
+@media (max-width: 64rem) {
+  #layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   ADD SHOE PANEL
 ========================= */
 
 #shoeform {
-  width: 90%;
-  max-width: 60rem;
-  margin: 2rem auto;
-  padding: 2rem;
-
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-
-  box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.08);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  position: sticky;
+  top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
 }
 
-#shoeform:hover {
-  transform: translateY(-0.3rem);
-  box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, 0.14);
+@media (max-width: 64rem) {
+  #shoeform {
+    position: static;
+  }
 }
 
 #shoeform h2 {
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #111827;
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 1.1rem;
 }
-
-
-/* =========================
-   FORM LAYOUT
-========================= */
 
 #shoeform form {
-  display: grid;
-
-  grid-template-columns:
-    minmax(8rem, 1fr)
-    minmax(12rem, 2fr);
-
-  gap: 1rem 1.5rem;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
-#shoeform label {
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.field label {
+  font-size: 0.82rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--muted);
 }
-
-
-/* =========================
-   INPUTS + SELECT
-========================= */
 
 #shoeform input,
 #shoeform select {
   width: 100%;
-  padding: 0.75rem 0.9rem;
-
-  border: 1px solid #cbd5e1;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
   border-radius: 0.5rem;
-
-  background: #f8fafc;
-  color: #1e293b;
-
-  font-size: 1rem;
-
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.95rem;
   outline: none;
-
-  transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease,
-    background-color 0.25s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-
-
-/* Hover */
 
 #shoeform input:hover,
 #shoeform select:hover {
-  border-color: #64748b;
+  border-color: #B9BFCB;
 }
-
-
-/* Focus */
 
 #shoeform input:focus,
 #shoeform select:focus {
-  border-color: #2563eb;
-  background: #ffffff;
-
-  box-shadow:
-    0 0 0 0.2rem rgba(37, 99, 235, 0.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232, 84, 28, 0.15);
 }
 
-
-/* =========================
-   ADD BUTTON
-========================= */
-
 #addinputbtn {
-  grid-column: 1 / -1;
-
-  justify-self: center;
-
-  margin-top: 0.75rem;
-
-  padding: 0.8rem 2rem;
-
+  margin-top: 0.4rem;
+  min-height: 2.7rem;
   border: none;
   border-radius: 0.5rem;
-
-  background: #2563eb;
-  color: #ffffff;
-
-  font-size: 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
   font-weight: 700;
-
-  cursor: pointer;
-
-  transition:
-    transform 0.25s ease,
-    background-color 0.25s ease,
-    box-shadow 0.25s ease;
+  font-size: 0.95rem;
+  transition: background 0.15s ease, transform 0.1s ease;
 }
 
 #addinputbtn:hover {
-  background: #1d4ed8;
-
-  transform: translateY(-0.15rem);
-
-  box-shadow:
-    0 0.5rem 1rem rgba(37, 99, 235, 0.25);
+  background: #D24714;
 }
 
 #addinputbtn:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
+.ghostbtn {
+  align-self: flex-start;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ghostbtn:hover {
+  border-color: var(--accent);
+  background: #FFF4EE;
+}
 
 /* =========================
-   DATABASE TABLE SECTION
+   COLOR SWATCH PICKER
+========================= */
+
+.swatchpicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.swatch {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px var(--border);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.swatch-outline {
+  box-shadow: 0 0 0 1px var(--border), inset 0 0 0 1px #CBD0D8;
+}
+
+.swatch:hover {
+  transform: scale(1.12);
+}
+
+.swatch.selected {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--ink);
+}
+
+/* =========================
+   SIZE + STOCK ROWS
+========================= */
+
+#sizerows,
+.cell-popover > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sizerow {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sizerow input {
+  min-height: 2.4rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  font-size: 0.9rem;
+}
+
+.sizerow-remove {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--surface);
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.sizerow-remove:hover {
+  background: #FBEAE8;
+  border-color: var(--danger);
+}
+
+/* =========================
+   INVENTORY PANEL
 ========================= */
 
 #tablediv {
-  width: 95%;
-  margin: 3rem auto;
-
-  padding: 2rem;
-
-  background: #ffffff;
-
-  border: 1px solid #e2e8f0;
-  border-radius: 1rem;
-
-  box-shadow:
-    0 0.5rem 1.5rem rgba(15, 23, 42, 0.08);
-
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
-#tablediv:hover {
-  transform: translateY(-0.2rem);
-
-  box-shadow:
-    0 0.8rem 2rem rgba(15, 23, 42, 0.12);
+#tablediv-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
 #tablediv h3 {
-  margin-bottom: 1.5rem;
-
-  text-align: center;
-
-  font-size: clamp(1.2rem, 3vw, 1.6rem);
-
-  color: #111827;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
+#tablecontrols {
+  display: flex;
+  gap: 0.6rem;
+}
+
+#searchbtn,
+#resetbtn {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+#searchbtn:hover {
+  border-color: var(--accent);
+  background: #FFF4EE;
+}
+
+#resetbtn {
+  color: var(--danger);
+  border-color: #F1C6C0;
+}
+
+#resetbtn:hover {
+  background: #FBEAE8;
+}
+
+#editinghint {
+  font-size: 0.83rem;
+  color: var(--muted);
+  margin: 0.5rem 0 1rem;
+}
 
 /* =========================
    TABLE
 ========================= */
 
+#tablescroll {
+  overflow-x: auto;
+}
+
 #table {
   width: 100%;
-
+  min-width: 62rem;
   border-collapse: collapse;
-
-  overflow: hidden;
-
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
-
-/* Table heading */
-
-#table thead {
-  background: #111827;
-  color: #ffffff;
-}
-
-#table th {
-  padding: 0.9rem;
-
+#table thead th {
   text-align: left;
-
-  font-weight: 600;
-
+  padding: 0.7rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
-
-
-/* Table cells */
 
 #table td {
-  padding: 0.85rem;
-
-  border-bottom: 1px solid #e2e8f0;
-
-  white-space: nowrap;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid #EEF0F2;
+  vertical-align: middle;
 }
 
-
-/* Alternating rows */
-
-#table tbody tr:nth-child(even) {
-  background: #f8fafc;
+#table tbody tr:hover td {
+  background: #FAFAF9;
 }
-
-
-/* Row hover */
-
-#table tbody tr {
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-#table tbody tr:hover {
-  background: #eff6ff;
-}
-
 
 /* =========================
-   RESPONSIVE DESIGN
+   IMAGE SLIDER
 ========================= */
 
-@media (max-width: 45rem) {
-
-  #shoeform {
-    width: 94%;
-    padding: 1.25rem;
-  }
-
-  #shoeform form {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-
-  #shoeform label {
-    margin-top: 0.6rem;
-  }
-
-  #addinputbtn {
-    width: 100%;
-  }
-
-
-  #tablediv {
-    width: 94%;
-    padding: 1rem;
-
-    /*
-      Allows the large table to scroll
-      horizontally on small screens.
-    */
-    overflow-x: auto;
-  }
-
-  #table {
-    min-width: 55rem;
-  }
-}
-
-
-/* =========================
-   SMALL SCREEN NAV
-========================= */
-
-@media (max-width: 30rem) {
-
-  nav {
-    padding: 1rem 3%;
-  }
-
-  #shoeform {
-    margin-top: 1.25rem;
-  }
-
-  #tablediv {
-    margin-top: 2rem;
-  }
-}
-
-#modaloverlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(5px);
-
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-
-  z-index: 1000;
-}
-
-#modal {
-  position: relative;
-  width: min(90%, 28rem);
-
-  padding: 2rem;
-  border-radius: 1rem;
-
-  background: #ffffff;
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
-
-  text-align: center;
-
-  transform: translateY(-2rem) scale(0.9);
-  transition: transform 0.3s ease;
-}
-
-#modaloverlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-#modaloverlay.active #modal {
-  transform: translateY(0) scale(1);
-}
-
-#closemodalbtn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-
-  border: none;
-  background: transparent;
-
-  font-size: 1.4rem;
-  font-weight: bold;
-
-  cursor: pointer;
-
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-#closemodalbtn:hover {
-  color: #e63946;
-  transform: rotate(90deg) scale(1.1);
-}
-
-#modal h4 {
-  margin: 1rem 0 0.7rem;
-
-  font-size: 1.4rem;
-  color: #e63946;
-}
-
-#modal h6 {
-  margin: 0 0 1.5rem;
-
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #555;
-}
-
-#brandmodal,
-#shoemodal {
-  margin: 0.6rem 0;
-  padding: 0.7rem 1rem;
-
-  border-radius: 0.5rem;
-  background: #f3f4f6;
-
-  text-align: left;
-  font-weight: 600;
-  color: #222;
-}
-#emptyinputmodal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.8);
-
-  width: min(90%, 32rem);
-  padding: 2.5rem 2rem;
-
-  background: linear-gradient(135deg, #ffffff, #f3f0ff);
-  border: 0.15rem solid rgba(130, 90, 255, 0.3);
-  border-radius: 1.5rem;
-
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-
-  box-shadow:
-    0 1.5rem 4rem rgba(60, 30, 120, 0.3),
-    0 0 2rem rgba(130, 90, 255, 0.25);
-
-  z-index: 1000;
-
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-#emptyinputmodal.active {
-  display: flex;
-  animation: modalAppear 0.35s ease forwards;
-}
-
-@keyframes modalAppear {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-#emptyinputmessage {
-  margin: 0;
-
-  color: #5b21b6;
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-align: center;
-  line-height: 1.5;
-}
-
-#closeemptyinputmodal {
-  padding: 0.8rem 2rem;
-
-  border: none;
-  border-radius: 0.7rem;
-
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  color: white;
-
-  font-size: 1rem;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  box-shadow: 0 0.5rem 1.2rem rgba(124, 58, 237, 0.35);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-#closeemptyinputmodal:hover {
-  transform: translateY(-0.15rem) scale(1.03);
-
-  box-shadow:
-    0 0.8rem 1.5rem rgba(124, 58, 237, 0.45);
-}
-
-#closeemptyinputmodal:active {
-  transform: scale(0.96);
-}
-.shoedeletebtn {
-  border: none;
-  background: transparent;
-  font-size: 1.1rem;
-  padding: 0.4rem 0.6rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.shoedeletebtn:hover {
-  background: #ffe4e4;
-  transform: scale(1.15);
-  box-shadow: 0 0.3rem 0.8rem rgba(220, 38, 38, 0.25);
-}
-
-.shoedeletebtn:active {
-  transform: scale(0.9);
-}
-
-#tablerow img {
-  width: 5rem;
-  height: 5rem;
-  object-fit: contain;
-  border-radius: 0.5rem;
-}
 .slider {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 0.4rem;
 }
 
 .slider img {
-  width: 10rem;
-  height: 10rem;
+  width: 3.4rem;
+  height: 3.4rem;
   object-fit: contain;
-  border-radius: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.slider img:hover {
-  transform: scale(1.05);
-}
-
-.slider button {
-  background-color: #e63946;
-  padding: 0.5rem 0.8rem;
-  border: none;
   border-radius: 0.4rem;
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.slider button:hover {
-  transform: scale(1.08);
-  opacity: 0.8;
-}
-
-.slider button:active {
-  transform: scale(0.95);
-}
-.slider img {
-  opacity: 1;
-  transition: opacity 0.3s ease;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: opacity 0.2s ease;
 }
 
 .slider img.changing {
   opacity: 0;
 }
 
+.slider button {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  font-size: 0.85rem;
+  line-height: 1;
+}
 
+.slider button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
+/* =========================
+   COLOR / SIZE CHIPS (read view in table)
+========================= */
 
-/* ==================== LOADING OVERLAY ==================== */
+.colorchips {
+  display: flex;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.colordot {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.sizechips {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.sizechip {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: #F1F3F5;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sizechip-out {
+  background: #FBEAE8;
+  color: var(--danger);
+}
+
+/* =========================
+   INLINE EDITABLE CELLS
+========================= */
+
+.editable-cell {
+  cursor: pointer;
+  border-radius: 0.35rem;
+  transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.editable-cell:hover {
+  background: #FFF4EE;
+  box-shadow: inset 0 0 0 1px #F3C9B4;
+}
+
+.editable-cell.editing {
+  background: transparent;
+  box-shadow: none;
+}
+
+.cell-input {
+  width: 100%;
+  min-width: 5rem;
+  min-height: 2.1rem;
+  padding: 0.3rem 0.5rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.cell-popover {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 14rem;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  box-shadow: 0 0.6rem 1.5rem rgba(20, 23, 28, 0.14);
+}
+
+/* =========================
+   DELETE BUTTON
+========================= */
+
+.shoedeletebtn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--danger);
+  font-size: 1rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.5rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.shoedeletebtn:hover {
+  background: #FBEAE8;
+  border-color: var(--danger);
+}
+
+/* =========================
+   MODALS (duplicate / validation)
+========================= */
+
+#modaloverlay,
+#searchmodal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(20, 23, 28, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+#modaloverlay.active,
+#searchmodal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#modal,
+#searchbox {
+  position: relative;
+  width: min(90%, 26rem);
+  padding: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.9rem;
+  text-align: left;
+  transform: translateY(-0.75rem);
+  transition: transform 0.25s ease;
+}
+
+#modaloverlay.active #modal,
+#searchmodal.active #searchbox {
+  transform: translateY(0);
+}
+
+#modal h4, #searchbox h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+#modal h6 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+#brandmodal, #shoemodal {
+  margin: 0.4rem 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--paper);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+#closemodalbtn, #closesearchmodal {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+#closemodalbtn:hover, #closesearchmodal:hover {
+  background: #FBEAE8;
+  color: var(--danger);
+}
+
+#searchbox select {
+  width: 100%;
+  min-height: 2.6rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+}
+
+#performsearchbtn {
+  width: 100%;
+  min-height: 2.6rem;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+#performsearchbtn:hover {
+  background: #D24714;
+}
+
+/* =========================
+   VALIDATION MODAL
+========================= */
+
+#emptyinputmodal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: min(90%, 24rem);
+  padding: 1.5rem;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  box-shadow: 0 1rem 3rem rgba(20, 23, 28, 0.2);
+  text-align: center;
+}
+
+#emptyinputmodal.active {
+  display: flex;
+}
+
+#emptyinputmessage {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+#closeemptyinputmodal {
+  padding: 0.55rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+}
+
+#closeemptyinputmodal:hover {
+  background: #D24714;
+}
+
+/* =========================
+   LOADING
+========================= */
 
 #loadingOverlay {
   position: fixed;
   inset: 0;
-
+  z-index: 2000;
   display: none;
-  justify-content: center;
   align-items: center;
-
-  background: rgba(0, 0, 0, 0.55);
-
-  z-index: 9999;
+  justify-content: center;
+  background: rgba(20, 23, 28, 0.45);
 }
-
-
-/* ==================== LOADING BOX ==================== */
 
 #loadingBox {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-
-  gap: 1rem;
-
-  padding: 2rem 3rem;
-
-  background: white;
-
-  border-radius: 1rem;
-
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25);
+  gap: 0.8rem;
+  padding: 1.5rem 2rem;
+  background: var(--surface);
+  border-radius: 0.8rem;
 }
-
-
-/* ==================== SPINNER ==================== */
 
 #loadingSpinner {
-  width: 3rem;
-  height: 3rem;
-
-  border: 0.35rem solid #ddd;
-
-  border-top-color: #333;
-
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0.3rem solid var(--border);
+  border-top-color: var(--accent);
   border-radius: 50%;
-
-  animation: loadingSpin 0.8s linear infinite;
+  animation: spin 0.75s linear infinite;
 }
 
-
-/* ==================== LOADING TEXT ==================== */
-
-#loadingBox p {
-  margin: 0;
-
-  font-size: 1rem;
-
-  font-weight: 600;
-
-  letter-spacing: 0.05rem;
-
-  color: #333;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
+/* =========================
+   ACCESSIBILITY
+========================= */
 
-/* ==================== SPINNER ANIMATION ==================== */
-
-@keyframes loadingSpin {
-
-  from {
-    transform: rotate(0deg);
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
+}
 
-  to {
-    transform: rotate(360deg);
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 30rem) {
+  #topbar {
+    padding: 1.1rem 1.25rem;
   }
-
+  #topbar-stats {
+    gap: 1.1rem;
+  }
+  #layout {
+    width: 94%;
+    margin-top: 1.25rem;
+  }
+  #shoeform, #tablediv {
+    padding: 1.1rem;
+  }
 }
