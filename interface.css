@@ -1,0 +1,683 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #eef2f7;
+  color: #1e293b;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+nav {
+  width: 100%;
+  padding: 1.2rem 5%;
+  background: #111827;
+  color: #ffffff;
+  text-align: center;
+  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+nav h1 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 0.08em;
+}
+
+
+/* =========================
+   ADD SHOE CARD
+========================= */
+
+#shoeform {
+  width: 90%;
+  max-width: 60rem;
+  margin: 2rem auto;
+  padding: 2rem;
+
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+
+  box-shadow: 0 0.5rem 1.5rem rgba(15, 23, 42, 0.08);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+#shoeform:hover {
+  transform: translateY(-0.3rem);
+  box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, 0.14);
+}
+
+#shoeform h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #111827;
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
+}
+
+
+/* =========================
+   FORM LAYOUT
+========================= */
+
+#shoeform form {
+  display: grid;
+
+  grid-template-columns:
+    minmax(8rem, 1fr)
+    minmax(12rem, 2fr);
+
+  gap: 1rem 1.5rem;
+  align-items: center;
+}
+
+#shoeform label {
+  font-weight: 600;
+  color: #334155;
+}
+
+
+/* =========================
+   INPUTS + SELECT
+========================= */
+
+#shoeform input,
+#shoeform select {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+
+  background: #f8fafc;
+  color: #1e293b;
+
+  font-size: 1rem;
+
+  outline: none;
+
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+
+/* Hover */
+
+#shoeform input:hover,
+#shoeform select:hover {
+  border-color: #64748b;
+}
+
+
+/* Focus */
+
+#shoeform input:focus,
+#shoeform select:focus {
+  border-color: #2563eb;
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 0.2rem rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================
+   ADD BUTTON
+========================= */
+
+#addinputbtn {
+  grid-column: 1 / -1;
+
+  justify-self: center;
+
+  margin-top: 0.75rem;
+
+  padding: 0.8rem 2rem;
+
+  border: none;
+  border-radius: 0.5rem;
+
+  background: #2563eb;
+  color: #ffffff;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+#addinputbtn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-0.15rem);
+
+  box-shadow:
+    0 0.5rem 1rem rgba(37, 99, 235, 0.25);
+}
+
+#addinputbtn:active {
+  transform: translateY(0);
+}
+
+
+/* =========================
+   DATABASE TABLE SECTION
+========================= */
+
+#tablediv {
+  width: 95%;
+  margin: 3rem auto;
+
+  padding: 2rem;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+
+  box-shadow:
+    0 0.5rem 1.5rem rgba(15, 23, 42, 0.08);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+#tablediv:hover {
+  transform: translateY(-0.2rem);
+
+  box-shadow:
+    0 0.8rem 2rem rgba(15, 23, 42, 0.12);
+}
+
+#tablediv h3 {
+  margin-bottom: 1.5rem;
+
+  text-align: center;
+
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+
+  color: #111827;
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+#table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  overflow: hidden;
+
+  font-size: 0.95rem;
+}
+
+
+/* Table heading */
+
+#table thead {
+  background: #111827;
+  color: #ffffff;
+}
+
+#table th {
+  padding: 0.9rem;
+
+  text-align: left;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+/* Table cells */
+
+#table td {
+  padding: 0.85rem;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  white-space: nowrap;
+}
+
+
+/* Alternating rows */
+
+#table tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+
+/* Row hover */
+
+#table tbody tr {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+#table tbody tr:hover {
+  background: #eff6ff;
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+
+@media (max-width: 45rem) {
+
+  #shoeform {
+    width: 94%;
+    padding: 1.25rem;
+  }
+
+  #shoeform form {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  #shoeform label {
+    margin-top: 0.6rem;
+  }
+
+  #addinputbtn {
+    width: 100%;
+  }
+
+
+  #tablediv {
+    width: 94%;
+    padding: 1rem;
+
+    /*
+      Allows the large table to scroll
+      horizontally on small screens.
+    */
+    overflow-x: auto;
+  }
+
+  #table {
+    min-width: 55rem;
+  }
+}
+
+
+/* =========================
+   SMALL SCREEN NAV
+========================= */
+
+@media (max-width: 30rem) {
+
+  nav {
+    padding: 1rem 3%;
+  }
+
+  #shoeform {
+    margin-top: 1.25rem;
+  }
+
+  #tablediv {
+    margin-top: 2rem;
+  }
+}
+
+#modaloverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(5px);
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  z-index: 1000;
+}
+
+#modal {
+  position: relative;
+  width: min(90%, 28rem);
+
+  padding: 2rem;
+  border-radius: 1rem;
+
+  background: #ffffff;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
+
+  text-align: center;
+
+  transform: translateY(-2rem) scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+#modaloverlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#modaloverlay.active #modal {
+  transform: translateY(0) scale(1);
+}
+
+#closemodalbtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  border: none;
+  background: transparent;
+
+  font-size: 1.4rem;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+#closemodalbtn:hover {
+  color: #e63946;
+  transform: rotate(90deg) scale(1.1);
+}
+
+#modal h4 {
+  margin: 1rem 0 0.7rem;
+
+  font-size: 1.4rem;
+  color: #e63946;
+}
+
+#modal h6 {
+  margin: 0 0 1.5rem;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+}
+
+#brandmodal,
+#shoemodal {
+  margin: 0.6rem 0;
+  padding: 0.7rem 1rem;
+
+  border-radius: 0.5rem;
+  background: #f3f4f6;
+
+  text-align: left;
+  font-weight: 600;
+  color: #222;
+}
+#emptyinputmodal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+
+  width: min(90%, 32rem);
+  padding: 2.5rem 2rem;
+
+  background: linear-gradient(135deg, #ffffff, #f3f0ff);
+  border: 0.15rem solid rgba(130, 90, 255, 0.3);
+  border-radius: 1.5rem;
+
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+
+  box-shadow:
+    0 1.5rem 4rem rgba(60, 30, 120, 0.3),
+    0 0 2rem rgba(130, 90, 255, 0.25);
+
+  z-index: 1000;
+
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+#emptyinputmodal.active {
+  display: flex;
+  animation: modalAppear 0.35s ease forwards;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+#emptyinputmessage {
+  margin: 0;
+
+  color: #5b21b6;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1.5;
+}
+
+#closeemptyinputmodal {
+  padding: 0.8rem 2rem;
+
+  border: none;
+  border-radius: 0.7rem;
+
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  color: white;
+
+  font-size: 1rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow: 0 0.5rem 1.2rem rgba(124, 58, 237, 0.35);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#closeemptyinputmodal:hover {
+  transform: translateY(-0.15rem) scale(1.03);
+
+  box-shadow:
+    0 0.8rem 1.5rem rgba(124, 58, 237, 0.45);
+}
+
+#closeemptyinputmodal:active {
+  transform: scale(0.96);
+}
+.shoedeletebtn {
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shoedeletebtn:hover {
+  background: #ffe4e4;
+  transform: scale(1.15);
+  box-shadow: 0 0.3rem 0.8rem rgba(220, 38, 38, 0.25);
+}
+
+.shoedeletebtn:active {
+  transform: scale(0.9);
+}
+
+#tablerow img {
+  width: 5rem;
+  height: 5rem;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+.slider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.slider img {
+  width: 10rem;
+  height: 10rem;
+  object-fit: contain;
+  border-radius: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.slider img:hover {
+  transform: scale(1.05);
+}
+
+.slider button {
+  background-color: #e63946;
+  padding: 0.5rem 0.8rem;
+  border: none;
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.slider button:hover {
+  transform: scale(1.08);
+  opacity: 0.8;
+}
+
+.slider button:active {
+  transform: scale(0.95);
+}
+.slider img {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.slider img.changing {
+  opacity: 0;
+}
+
+
+
+
+/* ==================== LOADING OVERLAY ==================== */
+
+#loadingOverlay {
+  position: fixed;
+  inset: 0;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  z-index: 9999;
+}
+
+
+/* ==================== LOADING BOX ==================== */
+
+#loadingBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
+
+  padding: 2rem 3rem;
+
+  background: white;
+
+  border-radius: 1rem;
+
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.25);
+}
+
+
+/* ==================== SPINNER ==================== */
+
+#loadingSpinner {
+  width: 3rem;
+  height: 3rem;
+
+  border: 0.35rem solid #ddd;
+
+  border-top-color: #333;
+
+  border-radius: 50%;
+
+  animation: loadingSpin 0.8s linear infinite;
+}
+
+
+/* ==================== LOADING TEXT ==================== */
+
+#loadingBox p {
+  margin: 0;
+
+  font-size: 1rem;
+
+  font-weight: 600;
+
+  letter-spacing: 0.05rem;
+
+  color: #333;
+}
+
+
+/* ==================== SPINNER ANIMATION ==================== */
+
+@keyframes loadingSpin {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
